@@ -1,0 +1,68 @@
+div#titlewithicon
+{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: .5vw;
+}
+
+div#titlewithicon > .icon
+{
+    color: chartreuse;
+    min-width: 25px;
+    min-height: 25px;
+    max-width: 5vw;
+    max-height: 5vh;
+    cursor: pointer;
+}
+
+form.content
+{
+    gap: 3vh;
+}
+
+form > div
+{
+    display: flex;
+    flex-direction: column;
+    gap: .5vh;
+}
+
+form > div > label
+{
+    display: block;
+}
+
+form > div > input
+{
+    display: block;
+    padding: 15px 10px;
+    border-radius: 5px;
+    outline: none;
+    border: none;
+    background: transparent;
+    border: 1px solid chartreuse;
+    color: white;
+    width: 30vw;
+    min-width: 250px;
+    transition: all .5s ease-in-out;
+}
+
+form > div > input[type="password"]::-ms-reveal { filter: invert(100%); }
+
+form > button { transition: all .5s ease-in-out; }
+
+div > input.error, div > small
+{
+    border-color: red;
+    transition: all .5s ease-in-out;
+}
+
+button.error, button.error:hover
+{
+    border-color: red;
+    color: red;
+    cursor: default;
+    text-decoration: none;
+    transition: all .5s ease-in-out;
+}

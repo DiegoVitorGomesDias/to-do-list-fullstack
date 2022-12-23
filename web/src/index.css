@@ -1,0 +1,75 @@
+@charset "utf-8";
+
+*, 
+*:after,
+*:before
+{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-decoration: none;
+  list-style-type: none;
+}
+
+body
+{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  width: 100vw;
+  background: #111; 
+  color: white;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+.content
+{
+  display: flex;
+  flex-direction: column;
+  gap: 1vh;
+  padding: 5vh 5vw;
+  border: 1px solid chartreuse;
+  border-radius: 1%;
+}
+
+.btn
+{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  width: 100%;
+  padding: 3% 6%;
+  border: none;
+  outline: none;
+  background: transparent;
+  border-radius: .3em;
+  font-weight: bold;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+
+  .btn-primary
+  {
+    color: chartreuse;
+    border: 1px solid chartreuse;
+  }
+
+    .btn-primary:hover
+    {
+      text-decoration: underline;
+    }
+
+  .btn-secundary
+  {
+    color: #ddd;
+    text-decoration: underline;
+  }
+
+    .btn-secundary:hover
+    {
+      color: #fff;
+    }

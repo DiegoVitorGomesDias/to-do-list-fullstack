@@ -1,0 +1,13 @@
+#Error404 > , #Error404 p
+{
+    text-align: center;
+}
+a
+{
+    color: chartreuse;
+}
+
+a:hover
+{
+    text-decoration: underline;
+}
