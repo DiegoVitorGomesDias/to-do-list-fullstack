@@ -20,7 +20,7 @@ export const Tasks = () =>
         `This action will permanently delete the logged in account and all of its tasks! Do you wish to continue?
         \nEstá ação irá deletar permanentemente a conta logada e todas as suas tasks! Deseja continuar?`
         );
-        if(confirmDeleted) 
+        if(confirmDeleted && env.API_URL) 
         {
             alert("User Deleted!");
             await axios
@@ -40,16 +40,19 @@ export const Tasks = () =>
     const [ tasks, setTasks ] = useState([]);
     const [ fetchTasks, setFetchTasks ] = useAsyncFn(async () => 
     {
-        const res = await axios
-        ({
-            method: "get",
-            baseURL: env.API_URL,
-            url: "/tasks",
-            headers: { "authorization": "Bearer " + auth.acessToken }
-        })
-        const mapTasks = [...res.data].map( tasks => JSON.parse(tasks.task))
-        console.info(mapTasks);
-        return mapTasks;
+        if ( !!env.API_URL )
+        {
+            const res = await axios
+            ({
+                method: "get",
+                baseURL: env.API_URL,
+                url: "/tasks",
+                headers: { "authorization": "Bearer " + auth.acessToken }
+            })
+            const mapTasks = [...res.data].map( tasks => JSON.parse(tasks.task))
+            return mapTasks;
+        }
+        else return [];
     });
 
     useEffect(() => 
@@ -65,15 +68,17 @@ export const Tasks = () =>
             const newTasks =  [...tasks];
             newTasks.push({ id: newTaskID, title: taskTitle, description: "", completed: false });
             setTasks(newTasks);
-
-            await axios
-            ({
-                method: "post",
-                baseURL: env.API_URL,
-                url: "/task",
-                headers: { "authorization": "Bearer " + auth.acessToken },
-                data: { id: newTaskID, title: taskTitle }
-            })
+            if ( !!env.API_URL )
+            {
+                await axios
+                ({
+                    method: "post",
+                    baseURL: env.API_URL,
+                    url: "/task",
+                    headers: { "authorization": "Bearer " + auth.acessToken },
+                    data: { id: newTaskID, title: taskTitle }
+                })
+            }
         },
 
         conclusedTask: async (task) =>
@@ -82,15 +87,18 @@ export const Tasks = () =>
             const newTasks = [ ...tasks ];
             newTasks[tasks.findIndex( e => e.id === task.id)] = task;
             setTasks(newTasks)
-
-            await axios
-            ({
-                method: "put",
-                baseURL: env.API_URL,
-                url: "/task",
-                headers: { "authorization": "Bearer " + auth.acessToken },
-                data: { id: task.id, title: task.title, description: task.description, completed: task.completed }
-            })            
+            
+            if ( !!env.API_URL )
+            {
+                await axios
+                ({
+                    method: "put",
+                    baseURL: env.API_URL,
+                    url: "/task",
+                    headers: { "authorization": "Bearer " + auth.acessToken },
+                    data: { id: task.id, title: task.title, description: task.description, completed: task.completed }
+                })
+            }
         },
 
         editTask: (task) => { setInEditTask(task); setFetchTasks(); },
@@ -100,15 +108,17 @@ export const Tasks = () =>
             const newTasks = [ ...tasks ];
             newTasks.splice(newTasks.findIndex( (e) => e.id === task.id ), 1);
             setTasks(newTasks)
-
-            await axios
-            ({
-                method: "delete",
-                baseURL: env.API_URL,
-                url: "/task",
-                headers: { "authorization": "Bearer " + auth.acessToken },
-                data: { id: task.id }
-            })   
+            if ( !!env.API_URL )
+            {
+                await axios
+                ({
+                    method: "delete",
+                    baseURL: env.API_URL,
+                    url: "/task",
+                    headers: { "authorization": "Bearer " + auth.acessToken },
+                    data: { id: task.id }
+                })
+            }
         }
     }
 

@@ -24,7 +24,7 @@ export const ScreenTaskEdit = ( { task, editTask } ) =>
         editTask.tasks[editTask.tasks.findIndex( (e) => e.id === task.id )].description = description;
         editTask.setTasks(editTask.tasks);
 
-        if (hasUpdateTask)
+        if (hasUpdateTask && !!env.API_URL)
         {
             await axios
             ({

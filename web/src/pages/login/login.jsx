@@ -26,20 +26,24 @@ export const Login = () =>
         validationSchema,
         onSubmit: async (values) => 
         {
-            const auth = await axios
-            ({
-                method: "get",
-                baseURL: env.API_URL,
-                url: "/login",
-                auth:
-                {
-                    username: values.email,
-                    password: values.password
-                }
-            }).catch((err) => alert("E-mail or Password invalid"))
-            if(auth.status === 200)
+            if(await axios.request(env.API_URL).then( () => true ).catch( () => false ) )
             {
-                localStorage.setItem("auth", JSON.stringify(auth.data));
+                const auth = await axios
+                ({
+                    method: "get",
+                    baseURL: env.API_URL,
+                    url: "/login",
+                    auth: { username: values.email, password: values.password }
+                }).catch((err) => alert("E-mail or Password invalid!"))
+                if(auth.status === 200)
+                {
+                    localStorage.setItem("auth", JSON.stringify(auth.data));
+                    window.location.pathname = "/tasks";
+                }
+            }
+            else
+            {
+                localStorage.setItem("auth", JSON.stringify({"acessToken": 123456789, sub: { username: values.email }}));
                 window.location.pathname = "/tasks";
             }
         }
