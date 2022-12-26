@@ -1,5 +1,3 @@
-import axios from "axios";
-
 import React from 'react';
 import "./register.css";
 
@@ -8,7 +6,8 @@ import { FaAngleLeft } from 'react-icons/fa'
 import * as yup from "yup";
 import { useFormik } from "formik";
 
-import env from "react-dotenv";
+import * as userAPI from "../../routes/user";
+import serverTestConnection from '../../routes/serverTestConnection';
 
 export const Register = () =>
 {   
@@ -34,28 +33,24 @@ export const Register = () =>
         validationSchema,
         onSubmit: async (values) => 
         {
-            const resPost = await axios
-            ({
-                method: "post",
-                baseURL: env.API_URL,
-                url: "/user",
-                data: { username: values.username, email: values.email, password: values.password }
-            }).catch((err) => alert("Account existing"))
-
-            if(resPost.status === 201)
+            if( await serverTestConnection() )
             {
-                const auth = await axios
-                ({
-                    method: "get",
-                    baseURL: env.API_URL,
-                    url: "/login",
-                    auth:
+                await userAPI.postUser(values)
+                .then( async () =>
+                {
+                    await userAPI.login(values)
+                    .then( (resLogin) => 
                     {
-                        username: values.email,
-                        password: values.password
-                    }
-                }).catch((err) => alert("E-mail or Password invalid"))
-                localStorage.setItem("auth", JSON.stringify(auth.data));
+                        localStorage.setItem("auth", JSON.stringify(resLogin.data));
+                        window.location.pathname = "/tasks";
+                    })
+                    .catch( (err) => alert(err) )
+                })
+                .catch( (err) => alert(err.response.data["Error"]) )
+            }
+            else
+            {
+                localStorage.setItem("auth", JSON.stringify({"acessToken": 123456789, sub: values }));
                 window.location.pathname = "/tasks";
             }
         }

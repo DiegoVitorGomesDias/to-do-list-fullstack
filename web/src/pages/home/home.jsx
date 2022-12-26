@@ -8,12 +8,12 @@ export const Home = () =>
                 <h1>To-do List Online</h1>
                 <button 
                     className='btn btn-primary' 
-                    onClick={() => window.location.pathname = "/login"}
+                    onClick={ () => window.location.replace("/login") }
                     title="Login"
                 >Login</button>
                 <button 
                     className='btn btn-secundary' 
-                    onClick={() => window.location.pathname = "/register"}
+                    onClick={ () => window.location.replace("/register") }
                     title="Register Account"
                 >New Account</button>
             </main>

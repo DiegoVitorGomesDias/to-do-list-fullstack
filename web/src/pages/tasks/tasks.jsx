@@ -1,6 +1,4 @@
 import React from "react";
-import axios from "axios";
-import env from "react-dotenv"
 import { useState, useEffect } from "react";
 import { useAsyncFn } from 'react-use';
 import { v4 as uuid } from "uuid"
@@ -9,6 +7,10 @@ import { MapTasks }  from "../../components/tasks/maptasks";
 import AddTask from "../../components/tasks/addtask";
 import { ScreenTaskEdit } from "../../components/tasks/editTask";
 import { FaArrowLeft, FaUserSlash } from "react-icons/fa";
+
+import serverTestConnection from '../../routes/serverTestConnection';
+import * as userAPI from "../../routes/user";
+import * as tasksAPI from "../../routes/tasks";
 
 export const Tasks = () =>
 {
@@ -20,45 +22,30 @@ export const Tasks = () =>
         `This action will permanently delete the logged in account and all of its tasks! Do you wish to continue?
         \nEstá ação irá deletar permanentemente a conta logada e todas as suas tasks! Deseja continuar?`
         );
-        if(confirmDeleted && env.API_URL) 
+
+        if(confirmDeleted)
         {
-            alert("User Deleted!");
-            await axios
-            ({
-                method: "delete",
-                baseURL: env.API_URL,
-                url: "/user",
-                headers: { "authorization": "Bearer " + auth.acessToken }
-            })
+            if ( await serverTestConnection() ) await userAPI.deleteUser();
             localStorage.clear();
             window.location.replace("/");
+            alert("User Deleted!");
         }
         else alert("Delete Canceled!");
     }
 
     const [inEditTask, setInEditTask] = useState(false);
     const [ tasks, setTasks ] = useState([]);
-    const [ fetchTasks, setFetchTasks ] = useAsyncFn(async () => 
-    {
-        if ( !!env.API_URL )
-        {
-            const res = await axios
-            ({
-                method: "get",
-                baseURL: env.API_URL,
-                url: "/tasks",
-                headers: { "authorization": "Bearer " + auth.acessToken }
-            })
-            const mapTasks = [...res.data].map( tasks => JSON.parse(tasks.task))
-            return mapTasks;
-        }
-        else return [];
+    const [ fetchTasks, setFetchTasks ] = useAsyncFn( async () => 
+    { 
+        if ( await serverTestConnection() ) return await tasksAPI.getTasksFromUser();
+        else { console.log(tasks); return [...tasks]}
     });
 
-    useEffect(() => 
+    useEffect( () => { setFetchTasks() }, [ setFetchTasks ]);
+    useEffect( () => 
     {
-        setFetchTasks().then( (value) => setTasks(value) );
-    }, [ setFetchTasks ]);
+        setTasks( (!fetchTasks.loading && !fetchTasks.error && fetchTasks.value) || [] );
+    }, [ setTasks, fetchTasks ]);
 
     const taskEvents = 
     {
@@ -68,17 +55,8 @@ export const Tasks = () =>
             const newTasks =  [...tasks];
             newTasks.push({ id: newTaskID, title: taskTitle, description: "", completed: false });
             setTasks(newTasks);
-            if ( !!env.API_URL )
-            {
-                await axios
-                ({
-                    method: "post",
-                    baseURL: env.API_URL,
-                    url: "/task",
-                    headers: { "authorization": "Bearer " + auth.acessToken },
-                    data: { id: newTaskID, title: taskTitle }
-                })
-            }
+
+            if ( await serverTestConnection() ) tasksAPI.postTask( { newTaskID, taskTitle } );
         },
 
         conclusedTask: async (task) =>
@@ -87,18 +65,8 @@ export const Tasks = () =>
             const newTasks = [ ...tasks ];
             newTasks[tasks.findIndex( e => e.id === task.id)] = task;
             setTasks(newTasks)
-            
-            if ( !!env.API_URL )
-            {
-                await axios
-                ({
-                    method: "put",
-                    baseURL: env.API_URL,
-                    url: "/task",
-                    headers: { "authorization": "Bearer " + auth.acessToken },
-                    data: { id: task.id, title: task.title, description: task.description, completed: task.completed }
-                })
-            }
+
+            if ( await serverTestConnection() ) tasksAPI.updateTask(task);
         },
 
         editTask: (task) => { setInEditTask(task); setFetchTasks(); },
@@ -108,22 +76,13 @@ export const Tasks = () =>
             const newTasks = [ ...tasks ];
             newTasks.splice(newTasks.findIndex( (e) => e.id === task.id ), 1);
             setTasks(newTasks)
-            if ( !!env.API_URL )
-            {
-                await axios
-                ({
-                    method: "delete",
-                    baseURL: env.API_URL,
-                    url: "/task",
-                    headers: { "authorization": "Bearer " + auth.acessToken },
-                    data: { id: task.id }
-                })
-            }
+
+            if ( await serverTestConnection() ) tasksAPI.deleteTask(task.id);
         }
     }
 
     return (
-        <div style={{padding: "5vh 5vw"}}>
+        <div style={{padding: "5vh 5vw", minHeight: "80vh", maxWidth: "100vw"}}>
             <div id="titleTasksScreen">
                 <a href="/" title="home"><FaArrowLeft /></a>
                 <h1>TASKS OF {(auth.sub.username).toUpperCase()}</h1>

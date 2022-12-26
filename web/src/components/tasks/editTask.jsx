@@ -2,13 +2,12 @@ import "./editTask.css"
 import React from 'react';
 import { useState } from 'react';
 
-import axios from "axios";
-import env from "react-dotenv"
+import serverTestConnection from '../../routes/serverTestConnection';
+import * as tasksAPI from "../../routes/tasks";
 
 export const ScreenTaskEdit = ( { task, editTask } ) =>
-{   
-    const auth = JSON.parse(localStorage.getItem("auth")).acessToken;
-
+{
+    console.log(editTask);
     const [title, setTitle] =  useState(task.title);
     const [description, setDescription] =  useState(task.description);
 
@@ -24,17 +23,7 @@ export const ScreenTaskEdit = ( { task, editTask } ) =>
         editTask.tasks[editTask.tasks.findIndex( (e) => e.id === task.id )].description = description;
         editTask.setTasks(editTask.tasks);
 
-        if (hasUpdateTask && !!env.API_URL)
-        {
-            await axios
-            ({
-                method: "put",
-                baseURL: env.API_URL,
-                url: "/task",
-                headers: { "authorization": "Bearer " + auth },
-                data: { id: task.id, title, description, completed: task.completed }
-            })
-        }
+        if (hasUpdateTask && await serverTestConnection() ) tasksAPI.updateTask(task);
         
         editTask.setInEditTask("");
     }

@@ -1,12 +1,11 @@
-import axios from "axios";
-
 import React from 'react';
 import { FaAngleLeft } from "react-icons/fa";
 
 import * as yup from "yup";
 import { useFormik } from "formik";
 
-import env from "react-dotenv";
+import * as userAPI from "../../routes/user";
+import serverTestConnection from '../../routes/serverTestConnection';
 
 export const Login = () =>
 {   
@@ -26,20 +25,15 @@ export const Login = () =>
         validationSchema,
         onSubmit: async (values) => 
         {
-            if(await axios.request(env.API_URL).then( () => true ).catch( () => false ) )
+            if( await serverTestConnection() )
             {
-                const auth = await axios
-                ({
-                    method: "get",
-                    baseURL: env.API_URL,
-                    url: "/login",
-                    auth: { username: values.email, password: values.password }
-                }).catch((err) => alert("E-mail or Password invalid!"))
-                if(auth.status === 200)
-                {
-                    localStorage.setItem("auth", JSON.stringify(auth.data));
+                await userAPI.login(values)
+                .then( (res) => 
+                { 
+                    localStorage.setItem("auth", JSON.stringify(res.data));
                     window.location.pathname = "/tasks";
-                }
+                })
+                .catch( (err) => alert(err) )
             }
             else
             {
