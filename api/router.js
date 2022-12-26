@@ -13,6 +13,8 @@ import * as user from "./routes/user/user.js"
 import * as middlewaresTasks from "./routes/tasks/middlewaresTasks.js"
 import * as task from "./routes/tasks/tasks.js"
 
+router.get("/", (req, res) => res.status(200).json({Server: "Running"}));
+
 router.get("/login", user.userLogin);
 router.get("/users", user.getUsers);
 router.post("/user", middlewaresUsers.verifyUserEmailPassword, middlewaresUsers.verifyHasUser, user.postUser);
