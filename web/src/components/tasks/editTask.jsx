@@ -2,12 +2,11 @@ import "./editTask.css"
 import React from 'react';
 import { useState } from 'react';
 
-import serverTestConnection from '../../routes/serverTestConnection';
 import * as tasksAPI from "../../routes/tasks";
+import serverTestConnection from '../../routes/serverTestConnection';
 
 export const ScreenTaskEdit = ( { task, editTask } ) =>
 {
-    console.log(editTask);
     const [title, setTitle] =  useState(task.title);
     const [description, setDescription] =  useState(task.description);
 
@@ -19,11 +18,13 @@ export const ScreenTaskEdit = ( { task, editTask } ) =>
     const updateTask = async (e) =>
     {
         e.preventDefault();
-        editTask.tasks[editTask.tasks.findIndex( (e) => e.id === task.id )].title = title;
-        editTask.tasks[editTask.tasks.findIndex( (e) => e.id === task.id )].description = description;
+        const indexTask = editTask.tasks.findIndex( (e) => e.id === task.id );
+        editTask.tasks[indexTask].title = title;
+        editTask.tasks[indexTask].description = description;
         editTask.setTasks(editTask.tasks);
 
-        if (hasUpdateTask && await serverTestConnection() ) tasksAPI.updateTask(task);
+        if ( hasUpdateTask && (await serverTestConnection()) ) 
+        tasksAPI.updateTask(editTask.tasks[indexTask]);
         
         editTask.setInEditTask("");
     }
@@ -40,7 +41,7 @@ export const ScreenTaskEdit = ( { task, editTask } ) =>
                         <label htmlFor="title">Description:</label>
                         <textarea name="description" id="" cols="30" rows="10" onChange={({target}) => changeDescription(target.value)} value={description}></textarea>                        
                     </div>
-                    <button type="submit" onClick={(e) => updateTask(e)}>{hasUpdateTask ? "Update Task" : "Close"}</button>
+                    <button type="submit" onClick={ updateTask }>{hasUpdateTask ? "Update Task" : "Close"}</button>
                 </form>
             </main>
         </>

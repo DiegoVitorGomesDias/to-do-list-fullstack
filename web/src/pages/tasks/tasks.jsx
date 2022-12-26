@@ -8,13 +8,15 @@ import AddTask from "../../components/tasks/addtask";
 import { ScreenTaskEdit } from "../../components/tasks/editTask";
 import { FaArrowLeft, FaUserSlash } from "react-icons/fa";
 
-import serverTestConnection from '../../routes/serverTestConnection';
 import * as userAPI from "../../routes/user";
 import * as tasksAPI from "../../routes/tasks";
 
+import serverTestConnection from "../../routes/serverTestConnection";
+
+const auth = JSON.parse(localStorage.getItem("auth"));
+
 export const Tasks = () =>
 {
-    const auth = JSON.parse(localStorage.getItem("auth"));
 
     const deleteUser = async () =>
     {
@@ -36,16 +38,13 @@ export const Tasks = () =>
     const [inEditTask, setInEditTask] = useState(false);
     const [ tasks, setTasks ] = useState([]);
     const [ fetchTasks, setFetchTasks ] = useAsyncFn( async () => 
-    { 
-        if ( await serverTestConnection() ) return await tasksAPI.getTasksFromUser();
-        else { console.log(tasks); return [...tasks]}
-    });
+    { if ( await serverTestConnection() ) return await tasksAPI.getTasksFromUser(); else return tasks });
 
     useEffect( () => { setFetchTasks() }, [ setFetchTasks ]);
     useEffect( () => 
-    {
-        setTasks( (!fetchTasks.loading && !fetchTasks.error && fetchTasks.value) || [] );
-    }, [ setTasks, fetchTasks ]);
+        setTasks( (!fetchTasks.loading && !fetchTasks.error && fetchTasks.value) || [] ), 
+        [ setTasks, fetchTasks ])
+    ;
 
     const taskEvents = 
     {
@@ -69,7 +68,7 @@ export const Tasks = () =>
             if ( await serverTestConnection() ) tasksAPI.updateTask(task);
         },
 
-        editTask: (task) => { setInEditTask(task); setFetchTasks(); },
+        editTask: async (task) => { setInEditTask(task); if ( await serverTestConnection() ) setFetchTasks(); },
 
         deleteTask: async (task) =>
         {
