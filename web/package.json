@@ -1,6 +1,7 @@
 {
   "name": "web",
   "version": "0.1.0",
+  "homepage": "https://github.com/DiegoVitorGomesDias/to-do-list-fullstack",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -20,10 +21,12 @@
     "yup": "^0.32.11"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -b master -d build",
     "start": "react-dotenv && react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "build": "react-dotenv && react-scripts build",
+    "test": "react-dotenv && react-scripts test",
+    "eject": "react-dotenv && react-scripts eject"
   },
   "eslintConfig": {
     "extends": [
@@ -47,5 +50,8 @@
     "whitelist": [
       "API_URL"
     ]
+  },
+  "devDependencies": {
+    "gh-pages": "^4.0.0"
   }
 }
