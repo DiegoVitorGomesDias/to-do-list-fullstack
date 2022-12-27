@@ -16,13 +16,13 @@ import { Tasks } from "./pages/tasks/tasks.jsx";
 const verifyHasTokenAndValidPath = () =>
 {
   const path = window.location.pathname;
-  const pagesPrivy = ["/tasks"];
+  const pagesPrivy = ["/to-do-list-fullstack/tasks"];
   const auth = localStorage.getItem("auth");
   const hasSession = sessionStorage.getItem("hasSession");
   sessionStorage.setItem("hasSession", true);
 
-  if (!auth && pagesPrivy.includes(path)) window.location.replace("/");
-  else if (auth && !hasSession) window.location.replace("/tasks");
+  if (!auth && pagesPrivy.includes(path)) window.location.replace("/to-do-list-fullstack/");
+  else if (auth && !hasSession) window.location.replace("/to-do-list-fullstack/tasks");
 }
 
 const router = createBrowserRouter
@@ -36,7 +36,8 @@ const router = createBrowserRouter
   {
     path: "/login",
     element: <Login />,
-    errorElement: <Error404 />
+    errorElement: <Error404 />,
+    loader: verifyHasTokenAndValidPath(),
   },
   {
     path: "/register",
@@ -48,7 +49,7 @@ const router = createBrowserRouter
     element: <Tasks />,
     errorElement: <Error404 />
   }
-]);
+], { basename: "/to-do-list-fullstack" });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
