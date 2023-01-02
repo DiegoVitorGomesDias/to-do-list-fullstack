@@ -1,7 +1,7 @@
 {
   "name": "web",
   "version": "0.1.0",
-  "homepage": "https://diegovitorgomesdias.github.io/to-do-list-fullstack/",
+  "homepage": ".",
   "private": false,
   "dependencies": {
     "@testing-library/jest-dom": "^5.16.5",
@@ -21,8 +21,6 @@
     "yup": "^0.32.11"
   },
   "scripts": {
-    "predeploy": "react-dotenv && npm run build",
-    "deploy": "react-dotenv && gh-pages -d build",
     "start": "react-dotenv && react-scripts start",
     "build": "react-dotenv && react-scripts build",
     "test": "react-scripts test",
@@ -50,8 +48,5 @@
     "whitelist": [
       "API_URL"
     ]
-  },
-  "devDependencies": {
-    "gh-pages": "^4.0.0"
   }
 }

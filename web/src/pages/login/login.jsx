@@ -37,7 +37,7 @@ export const Login = () =>
             }
             else
             {
-                localStorage.setItem("auth", JSON.stringify({"acessToken": 123456789, sub: { username: values.email }}));
+                localStorage.setItem("auth", JSON.stringify({"acessToken": 123456789, sub: { username: values.email.split("@")[0] }}));
                 window.location.pathname = "/tasks";
             }
         }

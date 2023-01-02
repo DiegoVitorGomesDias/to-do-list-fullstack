@@ -28,7 +28,8 @@ export const Tasks = () =>
         if(confirmDeleted)
         {
             if ( await serverTestConnection() ) await userAPI.deleteUser();
-            localStorage.clear();
+            localStorage.removeItem("auth");
+            localStorage.removeItem(auth.sub.username);
             window.location.replace("/");
             alert("User Deleted!");
         }
@@ -38,11 +39,13 @@ export const Tasks = () =>
     const [inEditTask, setInEditTask] = useState(false);
     const [ tasks, setTasks ] = useState([]);
     const [ fetchTasks, setFetchTasks ] = useAsyncFn( async () => 
-    { if ( await serverTestConnection() ) return await tasksAPI.getTasksFromUser(); else return tasks });
+    {   if ( await serverTestConnection() ) return await tasksAPI.getTasksFromUser(); 
+        else return JSON.parse(localStorage.getItem(auth.sub.username)) || tasks;
+    });
 
     useEffect( () => { setFetchTasks() }, [ setFetchTasks ]);
     useEffect( () => 
-        setTasks( (!fetchTasks.loading && !fetchTasks.error && fetchTasks.value) || [] ), 
+        setTasks( (!fetchTasks.loading && !fetchTasks.error && fetchTasks.value) || JSON.parse(localStorage.getItem(auth.sub.username)) || [] ), 
         [ setTasks, fetchTasks ])
     ;
 
@@ -79,6 +82,8 @@ export const Tasks = () =>
             if ( await serverTestConnection() ) tasksAPI.deleteTask(task.id);
         }
     }
+
+    window.addEventListener( "beforeunload", () => { if (localStorage.getItem("auth")) localStorage.setItem(auth.sub.username, JSON.stringify(tasks)) } );
 
     return (
         <div style={{padding: "5vh 5vw", minHeight: "80vh", maxWidth: "100vw"}}>
