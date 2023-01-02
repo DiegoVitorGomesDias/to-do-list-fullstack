@@ -3,7 +3,6 @@
 ### `npm i`
 
 ### router.js
-`
     import express from "express";
     const router = express.Router();
 
@@ -14,10 +13,8 @@
     router.use(cors());
 
     router.get("/", (req, res) => res.status(200).json({Server: "Running"}));
-`
 
 ### setup.js
-`
     import express from "express";
     import router from "./router.js";
 
@@ -25,15 +22,12 @@
     app.use(router);
 
     export default app;
-`
 
 ### server.js
-`
     import app from "./setup.js"
     const serverPort = 3500;
 
-    ``app.listen(serverPort, () =>  console.log(`Server running on port ${serverPort}`));``
-`
+    app.listen(serverPort, () =>  console.log(`Server running on port ${serverPort}`));
 
 ## Available Scripts
 
