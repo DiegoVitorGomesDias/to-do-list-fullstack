@@ -5,6 +5,14 @@ Este é um projeto de estudo, criando uma aplicação simulando um To-do List (L
 ## Frontend
 Na pasta ./web encontra-se todo o Frontend do To-do List.
 
+Imagens representativas do APP:
+
+Tela Principal:
+![Main Screen](./readme-assets/main-screen.png)
+
+Tela de Visualização e Edição de uma Task:
+![View Details Task](./readme-assets/view-task-screen.png)
+
 A organização dos arquivos foram feitas da seguinte forma:
 - web
     - node_modules
@@ -20,6 +28,8 @@ A organização dos arquivos foram feitas da seguinte forma:
         - index.js: contém o roteamento para todas as páginas.
         - .env: API_URL=""
 
+![Imagem Representativa](./readme-assets/web_archives.png)
+
 ## Backend
 Na pasta ./api encontra-se a estruturação da API e a coneção efetiva com o banco de dados do Xampp usando MySQL.
 
@@ -34,3 +44,6 @@ A organização dos arquivos foram feitas da seguinte forma:
     - router.js: contém o roteamento da API.
     - server.js: listen server app.
     - setup.js: app uses e configurações.
+
+
+![Imagem Representativa](./readme-assets/api_archives.png)
