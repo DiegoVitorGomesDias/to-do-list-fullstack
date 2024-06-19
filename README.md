@@ -36,7 +36,7 @@ Entretanto não deletei os resquests para a API, assim, sempre antes de realizar
 ![Imagem Representativa](./readme-assets/web_archives.png)
 
 ## Backend
-Na pasta [./api](https://github.com/DiegoVitorGomesDias/to-do-list-fullstack/tree/master/api) encontra-se a estruturação da API e a coneção efetiva com o banco de dados do [Xampp](https://www.apachefriends.org/pt_br/index.html) usando MySQL.
+Na pasta [./api](https://github.com/DiegoVitorGomesDias/to-do-list-fullstack/tree/master/api) encontra-se a estruturação da API e a conexão efetiva com o banco de dados do [Xampp](https://www.apachefriends.org/pt_br/index.html) usando MySQL.
 
 ### Banco de Dados MySql
 ![Users Structure](./readme-assets/db-users.png)
